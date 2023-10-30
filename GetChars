@@ -1,0 +1,63 @@
+Public Function GetChars(ByVal strText As String, ByVal intType As GetCharsType) As String
+      '---------------------------------------------------------------------------------------
+      ' Procedure : GetChars
+      ' Author    : Adiv Abramson
+      ' Date      : 04/02/2018
+      ' Purpose   : Return alpha or numerics from strText
+      '           : Changed Pattern for Numerics so that it returns floating point values,
+      '           : not just integers; also allow for negative numbers
+      '           : Corrected fatal flaw: when no match is found, there is nothing to replace with ""
+      '           : So return original string, don't return a zero length string!
+      '           : Make function exit immediately if strText is ""
+      '           :
+      '           :
+      '           :
+      '           :
+      '           :
+      ' Versions  : 1.0 - 04/02/2018 - Adiv Abramson
+      '           :
+      '           :
+      '           :
+      '           :
+      '           :
+      '           :
+      '           :
+      '---------------------------------------------------------------------------------------
+
+      Dim strResult As String
+      Dim objRegex As New RegExp
+
+
+
+10    On Error GoTo ErrProc
+
+
+20    If Trim(strText) = "" Then
+30       GetChars = ""
+40       Exit Function
+50    End If
+
+60    With objRegex
+70       .Global = True
+80       .IgnoreCase = True
+90       If intType = Alpha Then
+100         .Pattern = "[^a-z]"
+110      Else
+120         .Pattern = "[^0-9.-]"
+130      End If
+140      If .Test(strText) Then
+150         strResult = .Replace(strText, "")
+160         GetChars = strResult
+170      Else
+180         GetChars = strText
+190      End If
+200   End With
+
+
+210   Exit Function
+
+ErrProc:
+
+220       MsgBox "Error " & Err.Number & " (" & Err.Description & ") at line " & CStr(Erl) & " in procedure GetChars of Module mdlStringFunctions"
+End Function
+
