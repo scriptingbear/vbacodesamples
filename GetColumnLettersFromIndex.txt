@@ -1,7 +1,7 @@
 Public Function GetColumnLettersFromIndex(ByVal ColumnIndex As Integer) As String
 '---------------------------------------------------------------------------------------
 ' Procedure : GetColumnLettersFromIndex
-' Author    : Adiv Abramson
+' Author    : (C) 2024 by Adiv Abramson
 ' Date      : 6/11/2024
 ' Purpose   : Given the column index, return the letters of the corresponding
 '           : column. For example, GetColumnLettersFromIndex(1) = "A" and
