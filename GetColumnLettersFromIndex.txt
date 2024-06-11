@@ -1,0 +1,95 @@
+Public Function GetColumnLettersFromIndex(ByVal ColumnIndex As Integer) As String
+'---------------------------------------------------------------------------------------
+' Procedure : GetColumnLettersFromIndex
+' Author    : Adiv Abramson
+' Date      : 6/11/2024
+' Purpose   : Given the column index, return the letters of the corresponding
+'           : column. For example, GetColumnLettersFromIndex(1) = "A" and
+'           : GetColumnLettersFromIndex(16384) = "XFD".
+'           :
+'           :
+'           :
+'           :
+'           :
+'           :
+'           :
+'           :
+'           :
+'           :
+' Versions  : 1.0 - 6/11/2024 - Adiv Abramson
+'           :
+'           :
+'           :
+'           :
+'           :
+'           :
+'---------------------------------------------------------------------------------------
+
+'Strings:
+'*********************************
+
+'*********************************
+
+'Numerics:
+'*********************************
+
+'*********************************
+
+'Worksheets:
+'*********************************
+
+'*********************************
+
+'Workbooks:
+'*********************************
+
+'*********************************
+
+'Ranges:
+'*********************************
+
+'*********************************
+
+'Arrays:
+'*********************************
+
+'*********************************
+
+'Objects:
+'*********************************
+
+'*********************************
+
+'Variants:
+'*********************************
+
+'*********************************
+
+'Booleans:
+'*********************************
+
+'*********************************
+
+'Constants
+'*********************************
+Const MAX_COLUMN_INDEX As Integer = 16384
+'*********************************
+
+On Error GoTo ErrProc
+
+GetColumnLettersFromIndex = ""
+
+If ColumnIndex < 1 Or ColumnIndex > MAX_COLUMN_INDEX Then Exit Function
+
+GetColumnLettersFromIndex = _
+   Split(ThisWorkbook.Worksheets(1).Cells(1, ColumnIndex).Address(RowAbsolute:=True, _
+                                                                  ColumnAbsolute:=False, _
+                                                                  ReferenceStyle:=xlA1), "$")(0)
+
+
+Exit Function
+
+ErrProc:
+   GetColumnLettersFromIndex = ""
+   MsgBox "Error " & Err.Number & " (" & Err.Description & ") at line " & Erl & " in procedure GetColumnLettersFromIndex of Module " & MODULE_NAME
+End Function
