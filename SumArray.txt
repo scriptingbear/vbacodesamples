@@ -1,0 +1,91 @@
+Public Function SumArray(ByVal DataArray As Variant) As Variant
+'---------------------------------------------------------------------------------------
+' Procedure : SumArray
+' Author    : Adiv Abramson
+' Date      : 08/20/2024
+' Purpose   : Use JOIN() to delimit array elements with "+", then
+'           : use EVAL() to return the result of the summation.
+'           : This is for MS Access. For MS Excel, use Evaluate().
+'           :
+'           :
+'           :
+'           :
+'           :
+'           :
+'           :
+'           :
+'           :
+'           :
+' Versions  : 1.0 - 08/20/2024 - Adiv Abramson
+'           :
+'           :
+'           :
+'           :
+'           :
+'           :
+'---------------------------------------------------------------------------------------
+
+'Strings:
+'*********************************
+
+'*********************************
+
+'Numerics:
+'*********************************
+
+'*********************************
+
+'Worksheets:
+'*********************************
+
+'*********************************
+
+'Workbooks:
+'*********************************
+
+'*********************************
+
+'Ranges:
+'*********************************
+
+'*********************************
+
+'Arrays:
+'*********************************
+
+'*********************************
+
+'Objects:
+'*********************************
+
+'*********************************
+
+'Variants:
+'*********************************
+
+'*********************************
+
+'Booleans:
+'*********************************
+
+'*********************************
+
+'Constants
+'*********************************
+
+'*********************************
+
+On Error GoTo ErrProc
+
+SumArray = Null
+
+SumArray = Eval(Join(DataArray, "+"))
+
+
+Exit Function
+
+ErrProc:
+   SumArray = Null
+   MsgBox "Error " & Err.Number & " (" & Err.Description & ") at line " _
+           & Erl & " in procedure SumArray of Module " & MODULE_NAME
+End Function
