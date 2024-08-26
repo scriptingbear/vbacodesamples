@@ -938,15 +938,20 @@ ErrProc:
 End Function
 
 
-Public Sub AddToArray(ByRef DataArray As Variant, ByVal InputValue As Variant, ByVal KeepUnique As Boolean)
+Public Sub AddToArray(ByRef DataArray As Variant, ByVal InputValue As Variant, _
+                      ByVal KeepUnique As Boolean, Optional ByVal Flatten As Boolean = False)
       '---------------------------------------------------------------------------------------
       ' Procedure : AddToArray
       ' Author    : Adiv Abramson
-      ' Date      : 00/00/2024
+      ' Date      : 04/01/2018
       ' Purpose   : Add value to specified array and optionally ensure unique values
       '           : (1.1) Now supporting adding 1D arrays in addition to traditional single values
       '           : (1.2) Now simply adding input arrays to DataArray and in this case not
       '           : enforcing uniqueness.
+      '           : (1.3) If InputValue is itself an array, optionally "flatten" it by adding each
+      '           : element in InputValue individually to the existing array. Default behavior is
+      '           : to add the InputValue array as a single element in the existing array, i.e.
+      '           : embedding or nesting it.
       '           :
       '           :
       '           :
@@ -958,14 +963,10 @@ Public Sub AddToArray(ByRef DataArray As Variant, ByVal InputValue As Variant, B
       '           :
       '           :
       '           :
-      '           :
-      '           :
-      '           :
-      '           :
-      '  Versions : 1.0 - 00/00/2024 - Adiv Abramson
-      '           : 1.1 - 00/00/2024 - Adiv Abramson
-      '           : 1.2 - 00/00/2024 - Adiv Abramson
-      '           :
+      '  Versions : 1.0 - 04/03/2018 - Adiv Abramson
+      '           : 1.1 - 08/31/2019 - Adiv Abramson
+      '           : 1.2 - 06/10/2022 - Adiv Abramson
+      '           : 1.3 - 08/26/2024 - Adiv Abramson
       '           :
       '           :
       '           :
@@ -985,12 +986,8 @@ Public Sub AddToArray(ByRef DataArray As Variant, ByVal InputValue As Variant, B
       'Numerics:
       '*********************************
       Dim i As Long
-      Dim j As Long
       Dim lngDataArrayLBound As Long
       Dim lngDataArrayUBound As Long
-      Dim lngInputValueLBound As Long
-      Dim lngInputValueUBound As Long
-      Dim lngUniqueUBound As Long
       '*********************************
 
       'Worksheets:
@@ -1010,7 +1007,7 @@ Public Sub AddToArray(ByRef DataArray As Variant, ByVal InputValue As Variant, B
 
       'Arrays:
       '*********************************
-      Dim arUniqueInputValues As Variant
+
       '*********************************
 
       'Objects:
@@ -1020,13 +1017,12 @@ Public Sub AddToArray(ByRef DataArray As Variant, ByVal InputValue As Variant, B
 
       'Variants
       '*********************************
-
+      Dim vntInputValueItem As Variant
       '*********************************
 
       'Booleans
       '*********************************
       Dim blnAddingArray As Boolean
-      Dim blnIsUniqueValue As Boolean
       '*********************************
 
       'Constants
@@ -1038,12 +1034,19 @@ Public Sub AddToArray(ByRef DataArray As Variant, ByVal InputValue As Variant, B
 
 10    On Error GoTo ErrProc
 
-      '<NEW CODE:08/31/2019>
+
+      '========================================================
+      'NEW CODE: 08/26/2024 Now supporting adding an array to
+      'the existing array (embedded array). Will have the option
+      'to flatten the new array or simply add it as an element
+      'to the existing array
+      '========================================================
+
 20    blnAddingArray = IsArray(InputValue)
 
 30    If Not blnAddingArray Then
          '=========================================================================
-         'NEW CODE: Classic mode. Handles single input value
+         'NEW CODE: 08/31/2019 "Classic" mode. Handles single input value
          '=========================================================================
 
 40       If IsEmpty(DataArray) Or IsNull(DataArray) Then
@@ -1083,7 +1086,7 @@ Public Sub AddToArray(ByRef DataArray As Variant, ByVal InputValue As Variant, B
 290   End If 'Not blnAddingArray
 
       '=========================================================================
-      'Advanced mode: Handles input values that are
+      'NEW CODE: 08/31/2019 Advanced mode: Handles input values that are
       'themselves 1D arrays
       '=========================================================================
 300   If IsEmpty(DataArray) Then
@@ -1099,20 +1102,35 @@ Public Sub AddToArray(ByRef DataArray As Variant, ByVal InputValue As Variant, B
 400      ReDim DataArray(0)
 410      DataArray(0) = InputValue
 420   Else
-430      lngDataArrayUBound = UBound(DataArray)
-440      ReDim Preserve DataArray(lngDataArrayUBound + 1)
-450      DataArray(lngDataArrayUBound + 1) = InputValue
-460   End If 'IsEmpty(DataArray)
+         '========================================================
+         'NEW CODE: 08/26/2024 Optionally flatten InputValue array.
+         'Default is to add as a single element in the existing
+         'array
+         '========================================================
+430      If Not Flatten Then
+440         lngDataArrayUBound = UBound(DataArray)
+450         ReDim Preserve DataArray(lngDataArrayUBound + 1)
+460         DataArray(lngDataArrayUBound + 1) = InputValue
+470      Else
+480         For Each vntInputValueItem In InputValue
+490            lngDataArrayUBound = UBound(DataArray)
+500            ReDim Preserve DataArray(lngDataArrayUBound + 1)
+510            DataArray(lngDataArrayUBound + 1) = vntInputValueItem
+520         Next vntInputValueItem
+530      End If 'Not Flatten
+540   End If 'IsEmpty(DataArray)
 
 
 
-470   Exit Sub
+550   Exit Sub
 
 ErrProc:
 
-480       MsgBox "Error " & Err.Number & " (" & Err.Description & ") at line " & CStr(Erl) & " in procedure AddToArray of Module mdlUtil"
+560       MsgBox "Error " & Err.Number & " (" & Err.Description & ") at line " & CStr(Erl) _
+                  & " in procedure AddToArray of Module " & MODULE_NAME
 
 End Sub
+
 
 
 Public Function ConvertDynamicArray(ByVal DynamicArray As Range) As Variant
