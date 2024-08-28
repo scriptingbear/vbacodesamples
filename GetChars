@@ -1,14 +1,14 @@
-Public Function GetChars(ByVal strText As String, ByVal intType As GetCharsType) As String
+Public Function GetChars(ByVal Text As String, ByVal CharType As GetCharsType) As String
       '---------------------------------------------------------------------------------------
       ' Procedure : GetChars
       ' Author    : Adiv Abramson
       ' Date      : 04/02/2018
-      ' Purpose   : Return alpha or numerics from strText
+      ' Purpose   : Return alpha or numerics from Text
       '           : Changed Pattern for Numerics so that it returns floating point values,
       '           : not just integers; also allow for negative numbers
       '           : Corrected fatal flaw: when no match is found, there is nothing to replace with ""
-      '           : So return original string, don't return a zero length string!
-      '           : Make function exit immediately if strText is ""
+      '           : So return original string, don't return a zero length string.
+      '           : Make function exit immediately if Text is ""
       '           :
       '           :
       '           :
@@ -32,7 +32,7 @@ Public Function GetChars(ByVal strText As String, ByVal intType As GetCharsType)
 10    On Error GoTo ErrProc
 
 
-20    If Trim(strText) = "" Then
+20    If Trim(Text) = "" Then
 30       GetChars = ""
 40       Exit Function
 50    End If
@@ -40,16 +40,16 @@ Public Function GetChars(ByVal strText As String, ByVal intType As GetCharsType)
 60    With objRegex
 70       .Global = True
 80       .IgnoreCase = True
-90       If intType = Alpha Then
-100         .Pattern = "[^a-z]"
+90       If CharType = Alpha Then
+100         .PATTERN = "[^a-z]"
 110      Else
-120         .Pattern = "[^0-9.-]"
+120         .PATTERN = "[^0-9.-]"
 130      End If
-140      If .Test(strText) Then
-150         strResult = .Replace(strText, "")
+140      If .Test(Text) Then
+150         strResult = .Replace(Text, "")
 160         GetChars = strResult
 170      Else
-180         GetChars = strText
+180         GetChars = Text
 190      End If
 200   End With
 
@@ -58,6 +58,14 @@ Public Function GetChars(ByVal strText As String, ByVal intType As GetCharsType)
 
 ErrProc:
 
-220       MsgBox "Error " & Err.Number & " (" & Err.Description & ") at line " & CStr(Erl) & " in procedure GetChars of Module mdlStringFunctions"
+220       MsgBox "Error " & Err.Number & " (" & Err.Description & ") at line " _
+                 & CStr(Erl) & " in procedure GetChars of Module mdlStringFunctions"
 End Function
 
+==========================
+'Place in module Declarations section
+'of a separate module
+Public Enum GetCharsType
+  Alpha = 0
+  Numeric = 1
+End Enum
